@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d692411747720b244b9b037b1e2a4583
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 656
+  packageName: Street Bench
+  packageVersion: 1.0
+  assetPath: Assets/StreetBench/streetbanch2.prefab
+  uploadId: 24628

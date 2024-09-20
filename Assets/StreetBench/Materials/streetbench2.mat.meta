@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fc5c1f0c11d8e6540b225ea1e8694aa1
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 656
+  packageName: Street Bench
+  packageVersion: 1.0
+  assetPath: Assets/StreetBench/Materials/streetbench2.mat
+  uploadId: 24628
