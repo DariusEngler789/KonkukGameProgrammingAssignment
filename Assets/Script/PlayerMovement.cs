@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public float rotationSpeed;
     public GameObject bulletPrefab;
     public Transform bulletShootPos;
+    public Camera camera;
 
     float dashTime;
     Vector3 dashDirection;
@@ -39,6 +41,14 @@ public class PlayerMovement : MonoBehaviour
         if (Time.time - dashTime < dashDuration)
         {
             transform.Translate(dashDirection * dashSpeed * Time.deltaTime);
+
+            float t = (Time.time - dashTime) / dashDuration;
+            if (t < 0.3)
+                camera.fieldOfView = Mathf.SmoothStep(60.0f, 80.0f, t / 0.3f);
+            else if (t > 0.6)
+                camera.fieldOfView = Mathf.SmoothStep(80.0f, 60.0f, (t - 0.6f) / 0.3f);
+            else
+                camera.fieldOfView = 80;
         }
 
         float d = speed * Time.deltaTime;
