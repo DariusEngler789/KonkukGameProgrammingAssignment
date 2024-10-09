@@ -24,6 +24,7 @@ public class BulletMovement : MonoBehaviour
         if (enemy != null)
         {
             Destroy(enemy.gameObject);
+            Destroy(gameObject);
         }
     }
 

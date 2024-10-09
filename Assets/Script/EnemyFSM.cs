@@ -18,12 +18,12 @@ public class EnemyFSM : MonoBehaviour
 
     void ChangeTargetDirection()
     {
-        moveDirection = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f)).normalized;
+        transform.forward = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f)).normalized;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(moveDirection * Time.deltaTime * speed);
+        transform.Translate(transform.forward * Time.deltaTime * speed);
     }
 }
