@@ -37,8 +37,8 @@ public class Rate_Me : EditorWindow
     private void OnGUI()
     {
         
-        Texture2D border = EditorGUIUtility.Load("Assets/TreePackVol.1/Editor/Textures/UI/Ads/Rate_Border.psd") as Texture2D;
-        Texture2D ad1 = EditorGUIUtility.Load("Assets/TreePackVol.1/Editor/Textures/UI/Ads/Rate_Asset.psd") as Texture2D;
+        Texture2D border = EditorGUIUtility.Load("Assets/Tree_Packs/URP_Tree_Pack/Editor/Textures/UI/Ads/Rate_Border.psd") as Texture2D;
+        Texture2D ad1 = EditorGUIUtility.Load("Assets/Tree_Packs/URP_Tree_Pack/Editor/Textures/UI/Ads/Rate_Asset.psd") as Texture2D;
        
         EditorGUILayout.Space();
         EditorGUILayout.HelpBox("Rate this asset", MessageType.None);

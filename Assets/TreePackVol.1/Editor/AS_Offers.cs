@@ -37,10 +37,10 @@ public class AS_Offers : EditorWindow
     private void OnGUI()
     {
         
-        Texture2D border = EditorGUIUtility.Load("Assets/TreePackVol.1/Editor/Textures/UI/Ads/border.psd") as Texture2D;
-        Texture2D ad1 = EditorGUIUtility.Load("Assets/TreePackVol.1/Editor/Textures/UI/Ads/ad1.psd") as Texture2D;
-        Texture2D ad2 = EditorGUIUtility.Load("Assets/TreePackVol.1/Editor/Textures/UI/Ads/ad2.psd") as Texture2D;
-        Texture2D ad3 = EditorGUIUtility.Load("Assets/TreePackVol.1/Editor/Textures/UI/Ads/ad3.psd") as Texture2D;
+        Texture2D border = EditorGUIUtility.Load("Assets/Tree_Packs/URP_Tree_Pack/Editor/Textures/UI/Ads/border.psd") as Texture2D;
+        Texture2D ad1 = EditorGUIUtility.Load("Assets/Tree_Packs/URP_Tree_Pack/Editor/Textures/UI/Ads/ad1.psd") as Texture2D;
+        Texture2D ad2 = EditorGUIUtility.Load("Assets/Tree_Packs/URP_Tree_Pack/Editor/Textures/UI/Ads/ad2.psd") as Texture2D;
+        Texture2D ad3 = EditorGUIUtility.Load("Assets/Tree_Packs/URP_Tree_Pack/Editor/Textures/UI/Ads/ad3.psd") as Texture2D;
         EditorGUILayout.Space();
         EditorGUILayout.HelpBox("See the asset store offers", MessageType.None);
         EditorGUILayout.Space();
@@ -85,16 +85,16 @@ public class Startup
 {
     static Startup()
     {
-        EditorPrefs.SetInt("showCounts_treeCol2017", EditorPrefs.GetInt("showCounts_treeCol2017") + 1);
-        if (EditorPrefs.GetInt("showCounts_treeCol2017") == 100)    
+        EditorPrefs.SetInt("showCounts_treefreeurp", EditorPrefs.GetInt("showCounts_treefreeurp") + 1);
+        if (EditorPrefs.GetInt("showCounts_treefreeurp") == 100)    
         { 
 
             EditorApplication.ExecuteMenuItem("Window/Asset Store Offers");
         }
 
         // Rate me
-        EditorPrefs.SetInt("showCounts_rateTreePack2017n", EditorPrefs.GetInt("showCounts_rateTreePack2017n") + 1);
-        if (EditorPrefs.GetInt("showCounts_rateTreePack2017n") == 30)                 
+        EditorPrefs.SetInt("showCounts_treefreeurpn", EditorPrefs.GetInt("showCounts_treefreeurpn") + 1);
+        if (EditorPrefs.GetInt("showCounts_treefreeurpn") == 30)                 
         {   
             EditorApplication.ExecuteMenuItem("Window/Rate Asset");
         }
