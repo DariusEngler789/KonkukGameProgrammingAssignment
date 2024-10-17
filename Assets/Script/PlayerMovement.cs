@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     public Transform bulletShootPos;
     public Camera camera;
 
+    Vector2 movementInput;
+    float rotationInput;
     float dashTime;
     Vector3 dashDirection;
     float forwardTime;
@@ -22,26 +25,28 @@ public class PlayerMovement : MonoBehaviour
     float leftTime;
     float rightTime;
 
+    Rigidbody rb;
+
     void Awake()
     {
-        // Cursor.visible = false;
+        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        rb = GetComponentInChildren<Rigidbody>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        rb.velocity = speed * Time.deltaTime * (transform.forward * movementInput.y + transform.right * movementInput.x);
+        transform.Rotate(0, rotationInput * rotationSpeed * Time.deltaTime, 0);
 
         if (Time.time - dashTime < dashDuration)
         {
-            transform.Translate(dashDirection * dashSpeed * Time.deltaTime);
-
             float t = (Time.time - dashTime) / dashDuration;
             if (t < 0.3)
                 camera.fieldOfView = Mathf.SmoothStep(60.0f, 80.0f, t / 0.3f);
@@ -49,65 +54,68 @@ public class PlayerMovement : MonoBehaviour
                 camera.fieldOfView = Mathf.SmoothStep(80.0f, 60.0f, (t - 0.6f) / 0.3f);
             else
                 camera.fieldOfView = 80;
+
+            rb.velocity += dashDirection * dashSpeed * Time.deltaTime;
         }
+    }
 
-        float d = speed * Time.deltaTime;
-
-        if (Input.GetKey(KeyCode.W))
-            transform.Translate(0, 0, d);
-        else if (Input.GetKey(KeyCode.S))
-            transform.Translate(0, 0, -d);
-        if (Input.GetKey(KeyCode.A))
-            transform.Translate(-d, 0, 0);
-        else if (Input.GetKey(KeyCode.D))
-            transform.Translate(d, 0, 0);
-
-        if (Time.time - dashTime > dashTimeout)
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        movementInput = context.ReadValue<Vector2>();
+        if (context.started)
         {
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Time.time - dashTime > dashTimeout)
             {
-                if (Time.time - forwardTime < dashKeyTimeout)
+                if (movementInput.y > 0)
                 {
-                    dashTime = Time.time;
-                    dashDirection = Vector3.forward;
+                    if (Time.time - forwardTime < dashKeyTimeout)
+                    {
+                        dashTime = Time.time;
+                        dashDirection = transform.forward;
+                    }
+                    forwardTime = Time.time;
                 }
-                forwardTime = Time.time;
-            }
-            else if (Input.GetKeyDown(KeyCode.S))
-            {
-                if (Time.time - backwardTime < dashKeyTimeout)
+                else if (movementInput.y < 0)
                 {
-                    dashTime = Time.time;
-                    dashDirection = Vector3.back;
+                    if (Time.time - backwardTime < dashKeyTimeout)
+                    {
+                        dashTime = Time.time;
+                        dashDirection = -transform.forward;
+                    }
+                    backwardTime = Time.time;
                 }
-                backwardTime = Time.time;
-            }
-            else if (Input.GetKeyDown(KeyCode.A))
-            {
-                if (Time.time - leftTime < dashKeyTimeout)
+                else if (movementInput.x > 0)
                 {
-                    dashTime = Time.time;
-                    dashDirection = Vector3.left;
+                    if (Time.time - rightTime < dashKeyTimeout)
+                    {
+                        dashTime = Time.time;
+                        dashDirection = transform.right;
+                    }
+                    rightTime = Time.time;
                 }
-                leftTime = Time.time;
-            }
-            else if (Input.GetKeyDown(KeyCode.D))
-            {
-                if (Time.time - rightTime < dashKeyTimeout)
+                else if (movementInput.x < 0)
                 {
-                    dashTime = Time.time;
-                    dashDirection = Vector3.right;
+                    if (Time.time - leftTime < dashKeyTimeout)
+                    {
+                        dashTime = Time.time;
+                        dashDirection = -transform.right;
+                    }
+                    leftTime = Time.time;
                 }
-                rightTime = Time.time;
             }
         }
+    }
 
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        rotationInput = context.ReadValue<Vector2>().x;
+    }
 
-
-        float mouseX = Input.GetAxis("Mouse X");
-        transform.Rotate(0, mouseX * rotationSpeed * Time.deltaTime, 0);
-
-        if (Input.GetMouseButtonDown(0))
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
             Instantiate(bulletPrefab, bulletShootPos.position, transform.rotation);
+        }
     }
 }
