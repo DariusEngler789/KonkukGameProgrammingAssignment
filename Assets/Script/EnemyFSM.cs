@@ -8,9 +8,15 @@ public class EnemyFSM : MonoBehaviour
     public float updateDirectionRate;
 
 
+    Rigidbody rb;
+
     Vector3 moveDirection;
 
-    // Start is called before the first frame update
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
     void Start()
     {
         InvokeRepeating(nameof(ChangeTargetDirection), 0, updateDirectionRate);
@@ -21,9 +27,8 @@ public class EnemyFSM : MonoBehaviour
         transform.forward = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f)).normalized;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        transform.Translate(transform.forward * Time.deltaTime * speed);
+        rb.velocity = transform.forward * Time.fixedDeltaTime * speed;
     }
 }

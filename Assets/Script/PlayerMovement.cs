@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform bulletShootPos;
     public Camera camera;
+    public float bulletSpeed;
 
     Vector2 movementInput;
     float rotationInput;
@@ -34,16 +35,11 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponentInChildren<Rigidbody>();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        rb.velocity = speed * Time.deltaTime * (transform.forward * movementInput.y + transform.right * movementInput.x);
-        transform.Rotate(0, rotationInput * rotationSpeed * Time.deltaTime, 0);
+        rb.velocity = speed * Time.fixedDeltaTime * (transform.forward * movementInput.y + transform.right * movementInput.x);
+        transform.Rotate(0, rotationInput * rotationSpeed * Time.fixedDeltaTime, 0);
 
         if (Time.time - dashTime < dashDuration)
         {
@@ -55,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
             else
                 camera.fieldOfView = 80;
 
-            rb.velocity += dashDirection * dashSpeed * Time.deltaTime;
+            rb.velocity += dashDirection * dashSpeed * Time.fixedDeltaTime;
         }
     }
 
@@ -115,7 +111,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (context.started)
         {
-            Instantiate(bulletPrefab, bulletShootPos.position, transform.rotation);
+            GameObject obj = Instantiate(bulletPrefab, bulletShootPos.position, transform.rotation);
+            Vector3 dir = transform.forward;
+            dir.y = 0;
+            obj.GetComponent<Rigidbody>().AddForce(dir * bulletSpeed);
         }
     }
 }
