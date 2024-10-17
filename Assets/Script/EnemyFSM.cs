@@ -6,6 +6,7 @@ public class EnemyFSM : MonoBehaviour
 {
     public float speed;
     public float updateDirectionRate;
+    public Transform baseTransform;
 
 
     Rigidbody rb;
@@ -24,7 +25,14 @@ public class EnemyFSM : MonoBehaviour
 
     void ChangeTargetDirection()
     {
-        transform.forward = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f)).normalized;
+        float x = Random.Range(-1.0f, 1.0f);
+        float z = Random.Range(-1.0f, 1.0f);
+
+        Vector3 randomDir = new Vector3(x, 0, z);
+        Vector3 baseDir = baseTransform.position - transform.position;
+        baseDir.y = 0;
+
+        transform.forward = (randomDir.normalized + baseDir.normalized).normalized;
     }
 
     void FixedUpdate()

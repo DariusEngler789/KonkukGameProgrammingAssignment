@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,9 +12,11 @@ public class PlayerMovement : MonoBehaviour
     public float dashTimeout;
     public float rotationSpeed;
     public GameObject bulletPrefab;
+    public GameObject grenadePrefab;
     public Transform bulletShootPos;
     public Camera camera;
     public float bulletSpeed;
+    public float grenadeSpeed;
 
     Vector2 movementInput;
     float rotationInput;
@@ -115,6 +116,20 @@ public class PlayerMovement : MonoBehaviour
             Vector3 dir = transform.forward;
             dir.y = 0;
             obj.GetComponent<Rigidbody>().AddForce(dir * bulletSpeed);
+        }
+    }
+
+    public void OnFire2(InputAction.CallbackContext context)
+    {
+        print("Fire Grenade");
+        if (context.started)
+        {
+            float x = Random.Range(-180.0f, 180.0f);
+            float y = Random.Range(-180.0f, 180.0f);
+            float z = Random.Range(-180.0f, 180.0f);
+            GameObject obj = Instantiate(grenadePrefab, bulletShootPos.position, Quaternion.Euler(x, y, z));
+            Vector3 dir = transform.forward;
+            obj.GetComponent<Rigidbody>().AddForce(dir * grenadeSpeed);
         }
     }
 }
