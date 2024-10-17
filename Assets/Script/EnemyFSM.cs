@@ -32,7 +32,7 @@ public class EnemyFSM : MonoBehaviour
         Vector3 baseDir = baseTransform.position - transform.position;
         baseDir.y = 0;
 
-        transform.forward = (randomDir.normalized + baseDir.normalized).normalized;
+        transform.forward = (randomDir.normalized + baseDir.normalized * 4.0f).normalized;
     }
 
     void FixedUpdate()
