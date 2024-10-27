@@ -6,6 +6,7 @@ public class BulletMovement : MonoBehaviour
 {
     public float speed;
     public float lifeTime;
+    public ParticleSystem bloodSplashPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,7 @@ public class BulletMovement : MonoBehaviour
         var enemy = collision.gameObject.GetComponent<EnemyFSM>();
         if (enemy != null)
         {
+            Instantiate(bloodSplashPrefab, transform.position, transform.rotation);
             Destroy(enemy.gameObject);
             Destroy(gameObject);
         }
