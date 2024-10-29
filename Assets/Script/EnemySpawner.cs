@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,11 +30,16 @@ public class EnemySpawner : MonoBehaviour
     void SpawnOneEnemy()
     {
         Vector3 pos = transform.position;
-        pos.x += Random.Range(spawnMinRange, spawnMaxRange);
-        pos.z += Random.Range(spawnMinRange, spawnMaxRange);
+        float distance = UnityEngine.Random.Range(spawnMinRange, spawnMaxRange);
+        float angle = UnityEngine.Random.Range(0.0f, 2.0f * (float)Math.PI);
+        pos += new Vector3((float)Math.Cos(angle), 0.0f, (float)Math.Sin(angle)) * distance;
 
         var obj = Instantiate(enemyPrefab, pos, Quaternion.identity);
-        obj.GetComponent<EnemyFSM>().baseTransform = baseTransform;
+        // obj.GetComponent<EnemyFSM>().baseTransform = baseTransform;
+        obj.GetComponent<EnemyFSM>().baseTransform = transform;
+
+
+        print(pos);
 
         if (++spawnCount >= maxSpawnCount)
         {
