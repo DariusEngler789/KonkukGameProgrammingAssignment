@@ -123,7 +123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 40
   lifeTime: 10
-  bloodSplashPrefab: {fileID: 991889070796387973, guid: d88c7a8299fe5289cb13b18be4721d7a, type: 3}
+  damage: 50
 --- !u!54 &5508370912984522299
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -422,3 +422,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionRadius: 5
   explosionTimer: 2
+  damage: 100

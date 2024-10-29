@@ -6,6 +6,7 @@ public class GrenadeBehaviour : MonoBehaviour
 {
     public float explosionRadius;
     public float explosionTimer;
+    public float damage;
 
     float startTime;
 
@@ -32,7 +33,9 @@ public class GrenadeBehaviour : MonoBehaviour
             {
                 var enemy = collider.gameObject.GetComponent<EnemyFSM>();
                 if (enemy != null)
-                    Destroy(enemy.gameObject);
+                {
+                    enemy.DealDamage(damage);
+                }
             }
         }
     }
