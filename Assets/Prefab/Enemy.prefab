@@ -130,6 +130,7 @@ MonoBehaviour:
   baseTransform: {fileID: 0}
   bloodSplashPrefab: {fileID: 991889070796387973, guid: d88c7a8299fe5289cb13b18be4721d7a, type: 3}
   maxHealth: 100
+  focusDuration: 10
 --- !u!54 &2333667420571350589
 Rigidbody:
   m_ObjectHideFlags: 0

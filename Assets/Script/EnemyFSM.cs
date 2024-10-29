@@ -1,42 +1,95 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class EnemyFSM : MonoBehaviour
 {
     public float speed;
     public float updateDirectionRate;
     public Transform baseTransform;
+    public ParticleSystem bloodSplashPrefab;
+
+    public float maxHealth;
+    public float focusDuration;
 
 
+    float health;
+
+    float focusTime;
+
+    PlayerMovement player;
     Rigidbody rb;
+    NavMeshAgent navMeshAgent;
 
     Vector3 moveDirection;
+
+    enum EnemyState
+    {
+        MoveToPlayer,
+        MoveToBase,
+    };
+
+    EnemyState state = EnemyState.MoveToBase;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        player = FindFirstObjectByType<PlayerMovement>();
+        health = maxHealth;
+    }
+
+    void SetState(EnemyState newState)
+    {
+        if (newState == EnemyState.MoveToPlayer)
+        {
+            focusTime = Time.time;
+        }
+        state = newState;
+    }
+
+    public void DealDamage(float damage)
+    {
+        health -= damage;
+        if (health < 0)
+        {
+            health = 0;
+            Destroy(gameObject);
+        }
+
+        SetState(EnemyState.MoveToPlayer);
+    }
+
+    public void ReceiveBullet(float damage, Transform bullet)
+    {
+        Instantiate(bloodSplashPrefab, bullet.position, bullet.rotation);
+        rb.AddForce(bullet.forward * 10.0f);
+        DealDamage(damage);
     }
 
     void Start()
     {
-        InvokeRepeating(nameof(ChangeTargetDirection), 0, updateDirectionRate);
     }
 
-    void ChangeTargetDirection()
+    void Update()
     {
-        float x = Random.Range(-1.0f, 1.0f);
-        float z = Random.Range(-1.0f, 1.0f);
-
-        Vector3 randomDir = new Vector3(x, 0, z);
-        Vector3 baseDir = baseTransform.position - transform.position;
-        baseDir.y = 0;
-
-        transform.forward = (randomDir.normalized + baseDir.normalized * 4.0f).normalized;
-    }
-
-    void FixedUpdate()
-    {
-        rb.velocity = transform.forward * Time.fixedDeltaTime * speed;
+        if (state == EnemyState.MoveToBase)
+        {
+            navMeshAgent.SetDestination(baseTransform.position);
+        }
+        else if (state == EnemyState.MoveToPlayer)
+        {
+            if ((Time.time - focusTime) > focusDuration)
+            {
+                SetState(EnemyState.MoveToBase);
+            }
+            navMeshAgent.SetDestination(player.transform.position);
+            if (Vector3.Distance(transform.position, player.transform.position) < 1.0f)
+            {
+                SceneManager.LoadScene("LoseScene");
+            }
+        }
     }
 }
