@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.velocity = speed * Time.fixedDeltaTime * (transform.forward * movementInput.y + transform.right * movementInput.x);
+        Vector3 newVelocity = speed * Time.fixedDeltaTime * (transform.forward * movementInput.y + transform.right * movementInput.x).normalized;
         transform.Rotate(0, rotationInput * rotationSpeed * Time.fixedDeltaTime, 0);
 
         if (Time.time - dashTime < dashDuration)
@@ -52,8 +53,10 @@ public class PlayerMovement : MonoBehaviour
             else
                 camera.fieldOfView = 80;
 
-            rb.velocity += dashDirection * dashSpeed * Time.fixedDeltaTime;
+            newVelocity += dashDirection * dashSpeed * Time.fixedDeltaTime;
         }
+        newVelocity.y = rb.velocity.y;
+        rb.velocity = newVelocity;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -124,9 +127,9 @@ public class PlayerMovement : MonoBehaviour
         print("Fire Grenade");
         if (context.started)
         {
-            float x = Random.Range(-180.0f, 180.0f);
-            float y = Random.Range(-180.0f, 180.0f);
-            float z = Random.Range(-180.0f, 180.0f);
+            float x = UnityEngine.Random.Range(-180.0f, 180.0f);
+            float y = UnityEngine.Random.Range(-180.0f, 180.0f);
+            float z = UnityEngine.Random.Range(-180.0f, 180.0f);
             GameObject obj = Instantiate(grenadePrefab, bulletShootPos.position, Quaternion.Euler(x, y, z));
             Vector3 dir = transform.forward;
             obj.GetComponent<Rigidbody>().AddForce(dir * grenadeSpeed);
