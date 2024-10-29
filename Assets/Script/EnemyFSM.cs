@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class EnemyFSM : MonoBehaviour
 {
@@ -23,7 +24,8 @@ public class EnemyFSM : MonoBehaviour
     Rigidbody rb;
     NavMeshAgent navMeshAgent;
 
-    Vector3 moveDirection;
+
+    Slider slider;
 
     enum EnemyState
     {
@@ -39,6 +41,7 @@ public class EnemyFSM : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         player = FindFirstObjectByType<PlayerMovement>();
         health = maxHealth;
+        slider = GetComponentInChildren<Slider>();
     }
 
     void SetState(EnemyState newState)
@@ -53,7 +56,7 @@ public class EnemyFSM : MonoBehaviour
     public void DealDamage(float damage)
     {
         health -= damage;
-        if (health < 0)
+        if (health <= 0)
         {
             health = 0;
             Destroy(gameObject);
@@ -75,6 +78,8 @@ public class EnemyFSM : MonoBehaviour
 
     void Update()
     {
+        slider.maxValue = maxHealth;
+        slider.value = health;
         if (state == EnemyState.MoveToBase)
         {
             navMeshAgent.SetDestination(baseTransform.position);
