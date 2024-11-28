@@ -21,6 +21,7 @@ public class FpsCounter : MonoBehaviour
 
     void Update()
     {
-        frameCount++;
+        if (Time.timeScale != 0)
+            frameCount++;
     }
 }

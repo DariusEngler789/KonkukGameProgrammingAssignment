@@ -69,6 +69,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (Time.timeScale == 0)
+            return;
         movementInput = context.ReadValue<Vector2>();
         if (context.started)
         {
@@ -116,11 +118,15 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnLook(InputAction.CallbackContext context)
     {
+        if (Time.timeScale == 0)
+            return;
         rotationInput = context.ReadValue<Vector2>().x;
     }
 
     public void OnFire(InputAction.CallbackContext context)
     {
+        if (Time.timeScale == 0)
+            return;
         if (context.started)
         {
             GameObject obj = Instantiate(bulletPrefab, bulletShootPos.position, transform.rotation);
@@ -132,6 +138,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnFire2(InputAction.CallbackContext context)
     {
+        if (Time.timeScale == 0)
+            return;
         print("Fire Grenade");
         if (context.started)
         {
