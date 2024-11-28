@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -18,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public Camera camera;
     public float bulletSpeed;
     public float grenadeSpeed;
+    public Volume pp;
 
     Vector2 movementInput;
     float rotationInput;
@@ -29,12 +33,14 @@ public class PlayerMovement : MonoBehaviour
     float rightTime;
 
     Rigidbody rb;
+    ChromaticAberration chromaticAberration;
 
     void Awake()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         rb = GetComponentInChildren<Rigidbody>();
+        pp.profile.TryGet(out chromaticAberration);
     }
 
 
@@ -43,8 +49,10 @@ public class PlayerMovement : MonoBehaviour
         Vector3 newVelocity = speed * Time.fixedDeltaTime * (transform.forward * movementInput.y + transform.right * movementInput.x).normalized;
         transform.Rotate(0, rotationInput * rotationSpeed * Time.fixedDeltaTime, 0);
 
+        chromaticAberration.intensity.value = 0.0f;
         if (Time.time - dashTime < dashDuration)
         {
+            chromaticAberration.intensity.value = 1.0f;
             float t = (Time.time - dashTime) / dashDuration;
             if (t < 0.3)
                 camera.fieldOfView = Mathf.SmoothStep(60.0f, 80.0f, t / 0.3f);
