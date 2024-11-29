@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class EnemyFSM : MonoBehaviour
 {
-    public float speed;
     public float updateDirectionRate;
     public Transform baseTransform;
     public ParticleSystem bloodSplashPrefab;
@@ -16,13 +15,14 @@ public class EnemyFSM : MonoBehaviour
     public float focusDuration;
 
 
-    float health;
+    public float health;
 
     float focusTime;
 
     PlayerMovement player;
     Rigidbody rb;
     NavMeshAgent navMeshAgent;
+    Animator animator;
 
 
     Slider slider;
@@ -42,6 +42,7 @@ public class EnemyFSM : MonoBehaviour
         player = FindFirstObjectByType<PlayerMovement>();
         health = maxHealth;
         slider = GetComponentInChildren<Slider>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     void SetState(EnemyState newState)
@@ -53,13 +54,29 @@ public class EnemyFSM : MonoBehaviour
         state = newState;
     }
 
+    void DestroyGameObject()
+    {
+        Destroy(gameObject);
+    }
+
     public void DealDamage(float damage)
     {
+        if (health == 0)
+            return;
+
         health -= damage;
         if (health <= 0)
         {
+            animator.SetTrigger("Death");
             health = 0;
-            Destroy(gameObject);
+            navMeshAgent.enabled = false;
+            slider.gameObject.SetActive(false);
+            Invoke(nameof(DestroyGameObject), 5.0f);
+            // Destroy(gameObject);
+        }
+        else
+        {
+            animator.SetTrigger("Hit");
         }
 
         SetState(EnemyState.MoveToPlayer);
@@ -67,6 +84,8 @@ public class EnemyFSM : MonoBehaviour
 
     public void ReceiveBullet(float damage, Transform bullet)
     {
+        if (health == 0)
+            return;
         Instantiate(bloodSplashPrefab, bullet.position, bullet.rotation);
         rb.AddForce(bullet.forward * 10.0f);
         DealDamage(damage);
@@ -76,8 +95,22 @@ public class EnemyFSM : MonoBehaviour
     {
     }
 
+
+    float speed;
+    Vector3 lastPosition;
+    void FixedUpdate()
+    {
+        if (health == 0)
+            return;
+        speed = Mathf.Lerp(speed, (transform.position - lastPosition).magnitude / Time.deltaTime, 0.75f);
+        lastPosition = transform.position;
+        animator.SetFloat("Speed", speed);
+    }
+
     void Update()
     {
+        if (health == 0)
+            return;
         slider.maxValue = maxHealth;
         slider.value = health;
         if (state == EnemyState.MoveToBase)
@@ -91,6 +124,10 @@ public class EnemyFSM : MonoBehaviour
                 SetState(EnemyState.MoveToBase);
             }
             navMeshAgent.SetDestination(player.transform.position);
+            if (Vector3.Distance(transform.position, player.transform.position) < 2.0f)
+            {
+                animator.SetTrigger("Attack");
+            }
             if (Vector3.Distance(transform.position, player.transform.position) < 1.0f)
             {
                 SceneManager.LoadScene("LoseScene");

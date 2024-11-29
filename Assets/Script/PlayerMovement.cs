@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
     ChromaticAberration chromaticAberration;
+    Animator animator;
 
     void Awake()
     {
@@ -41,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         rb = GetComponentInChildren<Rigidbody>();
         pp.profile.TryGet(out chromaticAberration);
+        animator = GetComponentInChildren<Animator>();
     }
 
 
@@ -65,6 +67,8 @@ public class PlayerMovement : MonoBehaviour
         }
         newVelocity.y = rb.velocity.y;
         rb.velocity = newVelocity;
+
+        animator.SetFloat("Speed", new Vector2(rb.velocity.x, rb.velocity.z).magnitude);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -129,6 +133,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         if (context.started)
         {
+            animator.SetTrigger("Fire");
             GameObject obj = Instantiate(bulletPrefab, bulletShootPos.position, transform.rotation);
             Vector3 dir = transform.forward;
             dir.y = 0;
