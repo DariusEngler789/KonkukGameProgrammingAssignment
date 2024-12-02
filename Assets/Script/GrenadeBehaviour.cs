@@ -9,15 +9,13 @@ public class GrenadeBehaviour : MonoBehaviour
     public float damage;
     public AudioSource impactAudioSource;
     public AudioSource explodeAudioSource;
+    public GameObject explosionPrefab;
 
     float startTime;
 
     bool exploded = false;
+    GameObject instantiatedExplosion;
 
-
-    void Awake()
-    {
-    }
 
     void Start()
     {
@@ -38,6 +36,7 @@ public class GrenadeBehaviour : MonoBehaviour
         {
             if (!exploded)
             {
+                instantiatedExplosion = Instantiate(explosionPrefab, transform);
                 explodeAudioSource.Play();
                 exploded = true;
                 var colliders = Physics.OverlapSphere(transform.position, explosionRadius);
@@ -49,16 +48,22 @@ public class GrenadeBehaviour : MonoBehaviour
                         enemy.DealDamage(damage);
                     }
                 }
+
+                var renderers = GetComponentsInChildren<MeshRenderer>();
+                foreach (var renderer in renderers)
+                    renderer.enabled = false;
             }
         }
-        if (Time.time - startTime > explosionTimer + 1 && exploded)
+        if (Time.time - startTime > explosionTimer + 5 && exploded)
         {
+            Destroy(instantiatedExplosion);
             Destroy(gameObject);
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        impactAudioSource.Play();
+        if (!exploded)
+            impactAudioSource.Play();
     }
 }

@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     public float bulletSpeed;
     public float grenadeSpeed;
     public Volume pp;
+    public GameObject muzzleShot;
 
     Vector2 movementInput;
     float rotationInput;
@@ -127,6 +128,18 @@ public class PlayerMovement : MonoBehaviour
         rotationInput = context.ReadValue<Vector2>().x;
     }
 
+    void StopMuzzleShot()
+    {
+        if (Time.time - lastShootTime >= muzzleShotDuration)
+        {
+            muzzleShot.SetActive(false);
+        }
+    }
+
+    public float muzzleShotDuration;
+
+
+    float lastShootTime;
     public void OnFire(InputAction.CallbackContext context)
     {
         if (Time.timeScale == 0)
@@ -138,6 +151,18 @@ public class PlayerMovement : MonoBehaviour
             Vector3 dir = transform.forward;
             dir.y = 0;
             obj.GetComponent<Rigidbody>().AddForce(dir * bulletSpeed);
+
+            if (Time.time - lastShootTime >= muzzleShotDuration)
+            {
+                muzzleShot.SetActive(true);
+                var lightFlicker = muzzleShot.GetComponentInChildren<WFX_LightFlicker>();
+                var light = lightFlicker.gameObject;
+                Destroy(lightFlicker);
+                light.AddComponent<WFX_LightFlicker>();
+            }
+            lastShootTime = Time.time;
+            Invoke(nameof(StopMuzzleShot), muzzleShotDuration);
+            Invoke(nameof(StopMuzzleShot), muzzleShotDuration + 0.1f);
         }
     }
 

@@ -428,6 +428,7 @@ MonoBehaviour:
   damage: 100
   impactAudioSource: {fileID: 1606471220154174234}
   explodeAudioSource: {fileID: 2476661867768462083}
+  explosionPrefab: {fileID: 100008, guid: 7075bd5fe1480184695a32611c15da57, type: 3}
 --- !u!82 &2476661867768462083
 AudioSource:
   m_ObjectHideFlags: 0
