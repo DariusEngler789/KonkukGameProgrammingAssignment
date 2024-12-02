@@ -7,8 +7,17 @@ public class GrenadeBehaviour : MonoBehaviour
     public float explosionRadius;
     public float explosionTimer;
     public float damage;
+    public AudioSource impactAudioSource;
+    public AudioSource explodeAudioSource;
 
     float startTime;
+
+    bool exploded = false;
+
+
+    void Awake()
+    {
+    }
 
     void Start()
     {
@@ -27,16 +36,29 @@ public class GrenadeBehaviour : MonoBehaviour
         }
         if (Time.time - startTime > explosionTimer)
         {
-            Destroy(gameObject);
-            var colliders = Physics.OverlapSphere(transform.position, explosionRadius);
-            foreach (var collider in colliders)
+            if (!exploded)
             {
-                var enemy = collider.gameObject.GetComponent<EnemyFSM>();
-                if (enemy != null)
+                explodeAudioSource.Play();
+                exploded = true;
+                var colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+                foreach (var collider in colliders)
                 {
-                    enemy.DealDamage(damage);
+                    var enemy = collider.gameObject.GetComponent<EnemyFSM>();
+                    if (enemy != null)
+                    {
+                        enemy.DealDamage(damage);
+                    }
                 }
             }
         }
+        if (Time.time - startTime > explosionTimer + 1 && exploded)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        impactAudioSource.Play();
     }
 }
