@@ -12,6 +12,12 @@ public class BulletMovement : MonoBehaviour
     void Start()
     {
         Invoke(nameof(DestroyBullet), lifeTime);
+        Invoke(nameof(DestroyAudioSource), 1f);
+    }
+
+    void DestroyAudioSource()
+    {
+        Destroy(GetComponent<AudioSource>());
     }
 
     void DestroyBullet()
