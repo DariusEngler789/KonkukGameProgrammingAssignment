@@ -56,6 +56,8 @@ public class EnemySpawner : MonoBehaviour
 
         if (spawnCount == maxSpawnCount && enemies.Length == 0)
         {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             SceneManager.LoadScene("WinScene");
         }
     }

@@ -24,6 +24,8 @@ public class Base : MonoBehaviour
         var enemy = collider.gameObject.GetComponent<EnemyFSM>();
         if (enemy != null)
         {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             SceneManager.LoadScene("LoseScene");
         }
     }

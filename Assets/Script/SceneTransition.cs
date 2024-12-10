@@ -7,11 +7,15 @@ public class SceneTransition : MonoBehaviour
 {
     public void GotoMainScene()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene("MainScene");
     }
 
     public void GotoTitleScene()
     {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("TitleScene");
     }
 

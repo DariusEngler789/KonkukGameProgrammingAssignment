@@ -130,6 +130,8 @@ public class EnemyFSM : MonoBehaviour
             }
             if (Vector3.Distance(transform.position, player.transform.position) < 1.0f)
             {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
                 SceneManager.LoadScene("LoseScene");
             }
         }
