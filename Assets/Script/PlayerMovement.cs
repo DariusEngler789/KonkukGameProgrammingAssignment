@@ -147,6 +147,8 @@ public class PlayerMovement : MonoBehaviour
         if (context.started)
         {
             animator.SetTrigger("Fire");
+            var audio = GetComponent<AudioSource>();
+            audio.PlayOneShot(audio.clip);
             GameObject obj = Instantiate(bulletPrefab, bulletShootPos.position, transform.rotation);
             Vector3 dir = transform.forward;
             dir.y = 0;
